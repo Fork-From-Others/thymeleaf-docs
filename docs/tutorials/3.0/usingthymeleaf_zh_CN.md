@@ -1,42 +1,36 @@
 ---
-title: 'Tutorial: Using Thymeleaf'
+title: 'Tutorial: Using Thymeleaf（中文）'
 author: The Thymeleaf Team
 version: @documentVersion@
 thymeleafVersion: @projectVersion@
+language: Chinese
+lang: zh-CN
+translator: '刘德财 (<a href="https://github.com/Mr-LiuDC">@Mr-LiuDC</a>)'
 ---
 
 
 
 
-1 Introducing Thymeleaf
+1 Thymeleaf介绍
 =======================
 
 
 
-1.1 What is Thymeleaf?
+1.1 Thymeleaf是什么?
 ----------------------
 
-Thymeleaf is a modern server-side Java template engine for both web and
-standalone environments, capable of processing HTML, XML, JavaScript, CSS and
-even plain text. 
+Thymeleaf是⾯向Web和独⽴环境的现代服务器端Java模板引擎，能够处理HTML，XML，JavaScript，CSS甚⾄纯⽂本。
 
-The main goal of Thymeleaf is to provide an elegant and highly-maintainable way
-of creating templates. To achieve this, it builds on the concept of *Natural
-Templates* to inject its logic into template files in a way that doesn't affect
-the template from being used as a design prototype. This improves communication
-of design and bridges the gap between design and development teams.
+Thymeleaf的主要目标是提供一个优雅的、高度可维护的创建模板的方式。为了实现这一点，它建立在自然模板的概念之上，
+以不影响设计原型的方式将其逻辑注入到模板文件中。这改善了设计沟通，弥补了前端设计和开发人员之间的理解偏差。
 
-Thymeleaf has also been designed from the beginning with Web Standards in mind
--- especially **HTML5** -- allowing you to create fully validating templates if
-that is a need for you.
+Thymeleaf从设计之初就遵循Web标准——特别是HTML5标准 ，如果需要，Thymeleaf允许您创建完全符合HTML5验证标准的模板。
 
 
-
-1.2 What kind of templates can Thymeleaf process?
+1.2 Thymeleaf可以处理什么样的模板?
 -------------------------------------------------
 
-Out-of-the-box, Thymeleaf allows you to process six kinds of templates, each of
-which is called a **Template Mode**:
+开箱即⽤，Thymeleaf可让处理六种类型的模板，每种类型的模板称为**`模板模式`**:
 
  * HTML
  * XML
@@ -45,46 +39,32 @@ which is called a **Template Mode**:
  * CSS
  * RAW
 
-There are two *markup* template modes (`HTML` and `XML`), three *textual* template 
-modes (`TEXT`, `JAVASCRIPT` and `CSS`) and a *no-op* template mode (`RAW`).
+这六种模版模式包含两种标记模板模式（HTML和XML），三种⽂本模板模式（TEXT，JAVASCRIPT和CSS）和⼀个⽆操作模板模式（RAW）。
 
-The **`HTML`** template mode will allow any kind of HTML input, including HTML5,
-HTML 4 and XHTML. No validation or well-formedness check will be performed, and
-template code/structure will be respected to the biggest possible extent in
-output.
+**`HTML`**模板模式将允许任何类型的HTML输⼊，包括HTML5，HTML 4和XHTML。Thymeleaf在html5⾮验证模式和验证模式下都能正确执⾏，
+并且在输出结果中最⼤程度的遵循模板代码/结构。
 
-The **`XML`** template mode will allow XML input. In this case, code is expected 
-to be well-formed -- no unclosed tags, no unquoted attributes, etc -- and
-the parser will throw exceptions if well-formedness violations are found. Note
-that no *validation* (against a DTD or XML Schema) will be performed.
+**`XML`**模板模式将允许XML输⼊。在这种情况下，代码预期形式良好 - 没有未关闭的标签，没有引⽤属性等，
+如果出现⾮法XML输⼊，解析器将抛出异常。请注意，Thymeleaf不会执⾏**XML验证**（针对DTD或XML架构）。
 
-The **`TEXT`** template mode will allow the use of a special syntax for
-templates of a non-markup nature. Examples of such templates might be text
-emails or templated documentation. Note that HTML or XML templates can be also
-processed as `TEXT`, in which case they will not be parsed as markup, and every
-tag, DOCTYPE, comment, etc, will be treated as mere text.
+**`TEXT`**模板模式将允许对⾮标记特性的模板使⽤特殊语法。例如：⽂本电⼦邮件或模板⽂档。
+请注意，HTML或XML模板也可以作为TEXT处理，在这种情况下，它们将不会被解析为标记，
+并且每个标签如：DOCTYPE，注释等都将被视为纯⽂本。
 
-The **`JAVASCRIPT`** template mode will allow the processing of JavaScript files 
-in a Thymeleaf application. This means being able to use model data inside
-JavaScript files in the same way it can be done in HTML files, but with
-JavaScript-specific integrations such as specialized escaping or *natural
-scripting*. The `JAVASCRIPT` template mode is considered a *textual* mode 
-and therefore uses the same special syntax as the `TEXT` template mode.
+**`JAVASCRIPT`**模板模式将允许在Thymeleaf应⽤程序中处理JavaScript⽂件。
+这意味着可以在JavaScript⽂件中像与HTML⽂件中⼀样的⽅式使⽤模型数据，
+但可以使⽤特定于JavaScript的集成，例如专⻔的转义或⾃然脚本。 
+JAVASCRIPT模板模式被认为是⽂本模式，因此使⽤与TEXT模板模式相同的特殊语法。
 
-The **`CSS`** template mode will allow the processing of CSS files involved in a
-Thymeleaf application. Similar to the `JAVASCRIPT` mode, the `CSS` template mode
-is also a *textual* mode and uses the special processing syntax from the `TEXT`
-template mode.
+**`CSS`**模板模式将允许处理涉及Thymeleaf应⽤程序的CSS⽂件。与JAVASCRIPT模式类似，CSS模板模式也是⽂本模式，
+并使⽤TEXT模板模式下的特殊处理语法。
 
-The **`RAW`** template mode will simply not process templates at all. It is meant 
-to be used for inserting untouched resources (files, URL responses, etc.) into
-the templates being processed. For example, external, uncontrolled resources in
-HTML format could be included into application templates, safely knowing that
-any Thymeleaf code that these resources might include will not be executed.
+**`RAW`**模板模式根本不会处理模板。它⽤于将未经修改的资源（⽂件，URL响应等）插⼊正在处理的模板中。
+例如，HTML格式的外部不受控制的资源可以包含在应⽤程序模板中，安全地知道这些资源可能包含的任何Thymeleaf代码将不会被执⾏。
 
 
 
-1.3 Dialects: The Standard Dialect
+1.3 方言: Thymeleaf标准方言
 ----------------------------------
 
 Thymeleaf is an extremely extensible template engine (in fact it could be called
