@@ -41,8 +41,8 @@ Thymeleaf从设计之初就遵循Web标准——特别是HTML5标准 ，如果�
 
 这六种模版模式包含两种标记模板模式（HTML和XML），三种⽂本模板模式（TEXT，JAVASCRIPT和CSS）和⼀个⽆操作模板模式（RAW）。
 
-**`HTML`**模板模式将允许任何类型的HTML输⼊，包括HTML5，HTML 4和XHTML。Thymeleaf在html5⾮验证模式和验证模式下都能正确执⾏，
-并且在输出结果中最⼤程度的遵循模板代码/结构。
+**`HTML`**模板模式将允许任何类型的HTML输⼊，包括HTML5，HTML4和XHTML。
+Thymeleaf在HTML5⾮验证模式和验证模式下都能正确执⾏，并且在输出结果中最⼤程度的遵循模板代码/结构。
 
 **`XML`**模板模式将允许XML输⼊。在这种情况下，代码预期形式良好 - 没有未关闭的标签，没有引⽤属性等，
 如果出现⾮法XML输⼊，解析器将抛出异常。请注意，Thymeleaf不会执⾏**XML验证**（针对DTD或XML架构）。
@@ -67,73 +67,52 @@ JAVASCRIPT模板模式被认为是⽂本模式，因此使⽤与TEXT模板模式
 1.3 方言: Thymeleaf标准方言
 ----------------------------------
 
-Thymeleaf is an extremely extensible template engine (in fact it could be called
-a _template engine framework_) that allows you to define and customize the way
-your templates will be processed to a fine level of detail.
+Thymeleaf是一个非常容易扩展的模板引擎(事实上，它可以被称为模板引擎框架)，
+Thymeleaf允许你自定义模板，并且能够很好的处理模版中的各个细节。
 
-An object that applies some logic to a markup artifact (a tag, some text, a
-comment, or a mere placeholder if templates are not markup) is called a _processor_,
-and a set of these processors -- plus perhaps some extra artifacts -- is what
-a **dialect** is normally comprised of. Out of the box, Thymeleaf's core library
-provides a dialect called the **Standard Dialect**, which should be enough for
-most users. 
+将⼀些逻辑应⽤于标记组件（标签，一些文本，注释或者仅仅是模板不是标记的占位符）的对象被称为处理器，
+而这些处理器的集合（可能还有一些额外的组件）就组成了Thymeleaf方言。 
+开箱即用，Thymeleaf的核心库提供了一种称为**`Standard Dialect`**的方言，对大多数用户的使用场景来说应该是足够的。 
 
-> Note that dialects can actually have no processors and be entirely comprised
-> of other kinds of artifacts, but processors are definitely the most common
-> use case.
+> 请注意，方言实际上可以没有处理器，并且完全由其他类型的组件构成，但处理器绝对是最常见的例子。
 
-_This tutorial covers the Standard Dialect_. Every attribute and syntax feature
-you will learn about in the following pages is defined by this dialect, even if
-that isn't explicitly mentioned.
+本教程涵盖了Thymeleaf的标准方言。你在后面的章节中了解的每个属性和语法功能，即使未明确提及，均由该方言定义。
 
-Of course, users can create their own dialects (even extending the Standard one)
-if they want to define their own processing logic while taking advantage of the
-library's advanced features. Thymeleaf can also be configured to use several
-dialects at a time.
+当然，如果用户想利用库的高级功能定义自己的处理逻辑，用户可以创建自己的方言（甚至扩展标准方言）。
+Thymeleaf做些配置后也可以一次处理多种方言。
 
-> The official thymeleaf-spring3 and thymeleaf-spring4 integration packages
-> both define a dialect called the "SpringStandard Dialect", which is mostly the
-> same as the Standard Dialect, but with small adaptations to make better use of
-> some features in the Spring Framework (for example, by using Spring Expression
-> Language or SpringEL instead of OGNL). So if you are a Spring MVC user you are
-> not wasting your time, as almost everything you learn here will be of use in
-> your Spring applications.
+> 官方的thymeleaf-spring3和thymeleaf-spring4集成包都定义了一种称为**`SpringStandard Dialect`**的方言（Spring标准方言），
+> 它与标准方言大致相同，但是为了更好地利用Spring框架中的某些功能，
+> （例如，使用Spring Expression Language或SpringEL代替OGNL）。 
+> 因此，如果你是Spring MVC用户，那么你不会浪费很多时间来学习Thymeleaf和Spring的整合，
+> 因为你在本教程中学习的几乎所有的内容，都是基于Spring应用程序。
 
-Most of the processors of the Standard Dialect are _attribute processors_. This
-allows browsers to correctly display HTML template files even before
-being processed because they will simply ignore the additional attributes. For
-example, while a JSP using tag libraries could include a fragment of code not
-directly displayable by a browser like:
-
+标准方言的大多数处理器都是**`_attribute processors_`**（属性处理器）。 
+这使得浏览器可以在没处理HTML模板的情况下，正确显示HTML模板文件，因为浏览器会忽略其他不能识别的属性。
+例如，像下面这段JSP代码，由于包含浏览器不能识别的代码，会直接显示出来：
 ```html
 <form:inputText name="userName" value="${user.name}" />
 ```
 
-...the Thymeleaf Standard Dialect would allow us to achieve the same
-functionality with:
+但是用Thymeleaf标准方言，如下写法可以实现上述代码相同的功能：
 
 ```html
 <input type="text" name="userName" value="James Carrot" th:value="${user.name}" />
 ```
 
-Not only will this be correctly displayed by browsers, but this also allow us to
-(optionally) specify a value attribute in it ("James Carrot", in this case) that
-will be displayed when the prototype is statically opened in a browser, and that
-will be substituted by the value resulting from the evaluation of `${user.name}`
-during processing of the template.
+这不仅可以被浏览器正确显示，而且还允许在浏览器中打开静态原型时指定一个值属性（当然指定值属性也是可选项，本例中为James Carrot），
+在处理模板期间值属性将会被**`${user.name}`**的值所取代。
 
-This helps your designer and developer to work on the very same template file
-and reduce the effort required to transform a static prototype into a working
-template file. The ability to do this is a feature called _Natural Templating_.
+这有助于设计师和开发⼈员处理相同的模板⽂件，并减少将静态原型转换为后端模板⽂件所需的⼯作量。
+具备这种能⼒的模版我们称为**`_Natural Templating_`**（⾃然模板）。
 
 
 
 
-2 The Good Thymes Virtual Grocery
+2 虚拟杂货店例子**`Good Thymes`**
 =================================
 
-The source code for the examples shown in this, and future chapters of this
-guide,  can be found in the [Good Thymes Virtual Grocery GitHub repository](https://github.com/thymeleaf/thymeleafexamples-gtvg).
+本章节和后续章节的源代码可以在这里找到 [虚拟杂货店GitHub仓储地址](https://github.com/thymeleaf/thymeleafexamples-gtvg)。
 
 
 
