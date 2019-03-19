@@ -87,7 +87,7 @@ Thymeleaf做些配置后也可以一次处理多种方言。
 > 因此，如果你是Spring MVC用户，那么你不会浪费很多时间来学习Thymeleaf和Spring的整合，
 > 因为你在本教程中学习的几乎所有的内容，都是基于Spring应用程序。
 
-标准方言的大多数处理器都是**`_attribute processors_`**（属性处理器）。 
+标准方言的大多数处理器都是**`attribute processors`**（属性处理器）。 
 这使得浏览器可以在没处理HTML模板的情况下，正确显示HTML模板文件，因为浏览器会忽略其他不能识别的属性。
 例如，像下面这段JSP代码，由于包含浏览器不能识别的代码，会直接显示出来：
 ```html
@@ -104,7 +104,7 @@ Thymeleaf做些配置后也可以一次处理多种方言。
 在处理模板期间值属性将会被**`${user.name}`**的值所取代。
 
 这有助于设计师和开发⼈员处理相同的模板⽂件，并减少将静态原型转换为后端模板⽂件所需的⼯作量。
-具备这种能⼒的模版我们称为**`_Natural Templating_`**（⾃然模板）。
+具备这种能⼒的模版我们称为**`Natural Templating`**（⾃然模板）。
 
 
 
@@ -116,25 +116,21 @@ Thymeleaf做些配置后也可以一次处理多种方言。
 
 
 
-2.1 A website for a grocery
+2.1 杂货店网站
 ---------------------------
 
-To better explain the concepts involved in processing templates with Thymeleaf,
-this tutorial will use a demo application which you can download from the
-project's web site.
+为了更好地解释Thymeleaf处理模板所涉及到的概念，本教程将通过⼀个示例程序来说明，
+该示列程序可以从项目站点下载。
 
-This application is the web site of an imaginary virtual grocery, and will
-provide us with many scenarios to showcase Thymeleaf's many features.
+这个应用程序是一个假想的虚拟杂货的网站，并将为我们提供许多场景来展示Thymeleaf的许多功能。
 
-To start, we need a simple set of model entities for our application: `Products`
-which are sold to `Customers` by creating `Orders`. We will also be managing `Comments`
-about those `Products`:
+在开始介绍示例代码之前，我们先简单的分析⼀下示例程序中的实体模型：
+`Customers`（客户）通过创建`Orders`（订单）来购买`Products`（产品），
+系统还提供了对产品`Comments`（评论）的管理:
 
 ![Example application model](images/usingthymeleaf/gtvg-model.png)
 
-Our application will also have a very simple service layer, composed by `Service`
-objects containing methods like:
-
+我们的应用程序将有个简单的服务层，由`Service`对象组成，主要包含如下方法：
 
 ```java
 public class ProductService {
@@ -152,8 +148,7 @@ public class ProductService {
 }
 ```
 
-At the web layer our application will have a filter that will delegate
-execution to Thymeleaf-enabled commands depending on the request URL:
+在Web层，我们的应用程序将有一个过滤器，根据请求URL执行Thymeleaf启用的命令：
 
 ```java
 private boolean process(HttpServletRequest request, HttpServletResponse response)
@@ -213,7 +208,7 @@ private boolean process(HttpServletRequest request, HttpServletResponse response
 }
 ```
 
-This is our `IGTVGController` interface:
+这是我们的`IGTVGController` 接口:
 
 ```java
 public interface IGTVGController {
@@ -225,36 +220,32 @@ public interface IGTVGController {
 }
 ```
 
-All we have to do now is create implementations of the `IGTVGController`
-interface, retrieving data from the services and processing templates using the
-`ITemplateEngine` object.
-
-In the end, it will look like this:
+我们现在要做的就是创建`IGTVGController`接口的实现类，并从服务层获取数据，
+然后用`ITemplateEngine`对象处理模板完成数据的渲染。最后程序的执行结果如下所示：
 
 ![Example application home page](images/usingthymeleaf/gtvg-view.png)
 
-But first let's see how that template engine is initialized.
+首先让我们看看该模板引擎是如何初始化的。
 
 
 
-2.2 Creating and configuring the Template Engine
+2.2 模板引擎的创建和配置
 ------------------------------------------------
 
-The _process(...)_ method in our filter contained this line:
+在过滤器的 _process(...)_ ⽅法中包含下⾯⼀⾏代码:
 
 ```java
 ITemplateEngine templateEngine = this.application.getTemplateEngine();
 ```
 
-Which means that the _GTVGApplication_ class is in charge of creating and
-configuring one of the most important objects in a Thymeleaf application: the
-`TemplateEngine` instance (implementation of the `ITemplateEngine` interface).
+这意味着`GTVGApplication`类负责创建和配置Thymeleaf应⽤程序中最重要的对象之⼀:
+`TemplateEngine`实例（`ITemplateEngine`接口的实现）。
 
-Our `org.thymeleaf.TemplateEngine` object is initialized like this:
+我们的 `org.thymeleaf.TemplateEngine` 对象初始化方式如下：
 
 ```java
 public class GTVGApplication {
-  
+    
     
     ...
     private final TemplateEngine templateEngine;
@@ -290,21 +281,19 @@ public class GTVGApplication {
 }
 ```
 
-There are many ways of configuring a `TemplateEngine` object, but for now these
-few lines of code will teach us enough about the steps needed.
+其实有多种方式可以配置`TemplateEngine`对象，但是在本例中这几行代码足矣。
 
 
-### The Template Resolver
+### 模板解析器
 
-Let's start with the Template Resolver:
+让我们从模板解析器开始：
 
 ```java
 ServletContextTemplateResolver templateResolver = 
         new ServletContextTemplateResolver(servletContext);
 ```
 
-Template Resolvers are objects that implement an interface from the Thymeleaf
-API called `org.thymeleaf.templateresolver.ITemplateResolver`: 
+简单讲，模板解析器就是一些实现了 `org.thymeleaf.templateresolver.ITemplateResolver`接口的对象： 
 
 ```java
 public interface ITemplateResolver {
@@ -323,54 +312,44 @@ public interface ITemplateResolver {
 }
 ```
 
-These objects are in charge of determining how our templates will be accessed,
-and in this GTVG application, the `org.thymeleaf.templateresolver.ServletContextTemplateResolver`
-means that we are going to retrieve our template files as resources from the
-_Servlet Context_: an application-wide `javax.servlet.ServletContext` object
-that exists in every Java web application, and that resolves resources from the
-web application root.
+这些对象负责访问我们的模板，在GTVG应⽤程序中是`org.thymeleaf.templateresolver.ServletContextTemplateResolver`，
+这意味着我们将从Servlet上下⽂中获取我们的模板⽂件资源：应⽤程序范围的每个Java Web应⽤程序中都存在的
+`javax.servlet.ServletContext`对象，并从Web应⽤程序根⽬录中解析资源。
 
-But that's not all we can say about the template resolver, because we can set
-some configuration parameters on it. First, the template mode:
+但是，这并不是我们所说的模板解析的全部，我们还可以设置模版解析器的⼀些配置参数。
+首先，设置模板模式：
 
 ```java
 templateResolver.setTemplateMode(TemplateMode.HTML);
 ```
 
-HTML is the default template mode for `ServletContextTemplateResolver`, but it
-is good practice to establish it anyway so that our code documents clearly what
-is going on.
+`ServletContextTemplateResolver`的默认模版模式是HTML，但是我们最好还是显示的配置一下，做到心中有数。
 
 ```java
 templateResolver.setPrefix("/WEB-INF/templates/");
 templateResolver.setSuffix(".html");
 ```
 
-The _prefix_ and _suffix_ modify the template names that we will be passing to
-the engine for obtaining the real resource names to be used.
+通过设置模版的前缀（_prefix_）和后缀（_suffix_）名称，以便模板引擎获取真实的资源名称。
 
-Using this configuration, the template name _"product/list"_ would correspond to:
+使⽤此配置，模板名称 _"product/list"_ 将对应于：
 
 ```java
 servletContext.getResourceAsStream("/WEB-INF/templates/product/list.html")
 ```
 
-Optionally, the amount of time that a parsed template can live in the cache is
-configured at the Template Resolver by means of the _cacheTTLMs_ property:
+还可以选择性的通过 _cacheTTLMs_ 属性配置已解析的模板实例的缓存时间：
 
 ```java
 templateResolver.setCacheTTLMs(3600000L);
 ```
 
-A template can still be expelled from cache before that TTL is reached if the
-max cache size is reached and it is the oldest entry currently cached.
+如果缓存已经达到最大值，并且即便这个模板是当前缓存中最早的条目，
+只要还没到达TTL（Time To Live），该模板还是可以取出来。
 
-> Cache behaviour and sizes can be defined by the user by implementing the `ICacheManager`
-> interface or by modifying the `StandardCacheManager` object to manage the
-> default cache.
+> 对于缓存的⾏为和⼤⼩，⽤户可以通过实现`ICacheManager`接⼝或修改`StandardCacheManager`对象来管理默的认缓存设置。
 
-There is much more to learn about template resolvers, but for now let's have a
-look at the creation of our Template Engine object.
+关于模版解析器还有更多的知识需要介绍，但是现在我们来看看模板引擎对象的创建。
 
 
 ### The Template Engine
