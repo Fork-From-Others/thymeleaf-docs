@@ -352,42 +352,39 @@ templateResolver.setCacheTTLMs(3600000L);
 关于模版解析器还有更多的知识需要介绍，但是现在我们来看看模板引擎对象的创建。
 
 
-### The Template Engine
+### 模板引擎
 
-Template Engine objects are implementations of the `org.thymeleaf.ITemplateEngine`
-interface. One of these implementations is offered by the Thymeleaf core:
-`org.thymeleaf.TemplateEngine`, and we create an instance of it here:
+模板引擎是一些实现 `org.thymeleaf.ITemplateEngine` 接口的对象。
+这些实现对象之⼀就是由Thymeleaf核⼼API `org.thymeleaf.TemplateEngine` 提供，
+我们可以通过如下方式创建⼀个模板引擎实例：
 
 ```java
 templateEngine = new TemplateEngine();
 templateEngine.setTemplateResolver(templateResolver);
 ```
 
-Rather simple, isn't it? All we need is to create an instance and set the
-Template Resolver to it.
+我们所需要的做的就是是创建一个实例并给它设置它模板解析器，是不是相当的简单？
 
-A template resolver is the only *required* parameter a `TemplateEngine` needs,
-although there are many others that will be covered later (message resolvers,
-cache sizes, etc). For now, this is all we need.
+模板解析器是 `TemplateEngine` 需要的唯⼀必需参数，
+尽管还有很多其他参数后面将会讲到（消息解析器，缓存⼤⼩等），但就目前来讲，这些就足够了。
 
-Our Template Engine is now ready and we can start creating our pages using
-Thymeleaf.
+模板引擎现在已经准备就绪了，我们可以开始使⽤Thymeleaf创建我们的⻚⾯了。
 
 
 
 
-3 Using Texts
+3 文本的使用
 =============
 
 
 
-3.1 A multi-language welcome
+3.1 多语⾔欢迎⻚
 ----------------------------
 
-Our first task will be to create a home page for our grocery site.
+我们的第一个任务是为我们的杂货网站创建一个主页。
 
-The first version of this page will be extremely simple: just a title and a
-welcome message. This is our `/WEB-INF/templates/home.html` file:
+该⻚⾯的第⼀个版本将⾮常简单：只需⼀个标题和⼀个欢迎信息。 
+这是我们的 `/WEB-INF/templates/home.html` ⽂件：
 
 ```html
 <!DOCTYPE html>
@@ -410,26 +407,22 @@ welcome message. This is our `/WEB-INF/templates/home.html` file:
 </html>
 ```
 
-The first thing you will notice is that this file is HTML5 that can be correctly
-displayed by any browser because it does not include any non-HTML tags (browsers
-ignore all attributes they don't understand, like `th:text`).
+您会注意到的第⼀件事是，该⽂件是HTML5，可以由任何浏览器正确显示，
+因为它不包括任何⾮HTML标签（浏览器忽略他们不明⽩的所有属性，如 `th:text` ）。
 
-But you may also notice that this template is not really a _valid_ HTML5
-document, because these non-standard attributes we are using in the `th:*` form
-are not allowed by the HTML5 specification. In fact, we are even adding an `xmlns:th` 
-attribute to our `<html>` tag, something absolutely non-HTML5-ish:
+但是你也可能会注意到，这个模板并不是⼀个真正有效的HTML5⽂档，
+因为HTML5规范不允许使用像 `th:*` 形式的⾮标准属性。
+事实上，我们还在 `<html>` 标签中添加了⼀个 `xmlns:th` 属性，这绝对是⾮HTML5标准：
 
 ```html
 <html xmlns:th="http://www.thymeleaf.org">
 ```
 
-...which has no influence at all in template processing, but works as an
-*incantation* that prevents our IDE from complaining about the lack of a
-namespace definition for all those `th:*` attributes.
+这些在模板处理中根本没有任何影响，但作为⼀种编程惯例，
+我们通常会用指定命名空间的方式，来阻⽌IDE无法识别 `th:*` 属性的警告。
 
-So what if we wanted to make this template **HTML5-valid**? Easy: switch to
-Thymeleaf's data attribute syntax, using the `data-` prefix for attribute names
-and hyphen (`-`) separators instead of semi-colons (`:`):
+那么如何使这个HTML5模板有效呢？ 很简单，切换到Thymeleaf的数据属性语法，
+以 `data-` 为前缀，用连接符 `-` 替换属性名称的 `:` 连接符，像下面这样：
 
 ```html
 <!DOCTYPE html>
@@ -452,74 +445,59 @@ and hyphen (`-`) separators instead of semi-colons (`:`):
 </html>
 ```
 
-Custom `data-` prefixed attributes are allowed by the HTML5 specification, so,
-with this code above, our template would be a *valid HTML5 document*.
+以 `data-` 开头的自定义属性在HTML5规范中是允许的，
+因此，使⽤上⾯的代码，我们的模板将是⼀个有效的HTML5⽂档。
 
-> Both notations are completely equivalent and interchangeable, but for the sake
-> of simplicity and compactness of the code samples, this tutorial will use the
-> *namespace notation* (`th:*`). Also, the `th:*` notation is more general and
-> allowed in every Thymeleaf template mode (`XML`, `TEXT`...) whereas the `data-`
-> notation is only allowed in `HTML` mode.
+> 上面这两种形式是完全等同的并且是可以互换的，但为了使我们的示例代码看起来简单和紧凑，
+本教程将使⽤命名空间符号（`th：*`）这种形式。 
+此外，`th:*` 符号在Thymeleaf模板模式（`XML`，`TEXT` ...）中更为通⽤，
+⽽` data-` 这种形式只允许在HTML模式下使⽤。
 
 
-### Using th:text and externalizing text
+### 使用 `th:text` 以及外部化文本
 
-Externalizing text is extracting fragments of template code out of template
-files so that they can be kept in separate files (typically `.properties` files)
-and that they can be easily replaced with equivalent texts written in other
-languages (a process called internationalization or simply _i18n_). Externalized
-fragments of text are usually called *"messages"*.
+外部化⽂本是从模板⽂件中提取模板代码的⽚段，
+以便它们可以保存在单独的⽂件中（通常为 `.properties`⽂件），
+并且可以轻松地替换为使⽤其他语⾔编写的等效⽂本（这种方式称为国际化简写 `i18n`）。
+⽂本的外部化⽚段通常称为消息（*"messages"*）。
 
-Messages always have a key that identifies them, and Thymeleaf allows you to
-specify that a text should correspond to a specific message with the `#{...}`
-syntax:
+消息总是具有标识它们的键（`key`），
+⽽Thymeleaf允许您使⽤ `#{...}` 语法表达式指定对应的特定消息：
 
 ```html
 <p th:text="#{home.welcome}">Welcome to our grocery store!</p>
 ```
 
-What we can see here are in fact two different features of the Thymeleaf
-Standard Dialect:
+我们在这⾥看到的其实是Thymeleaf标准⽅⾔的两个不同特征：
 
- * The `th:text` attribute, which evaluates its value expression and sets the
-   result as the body of the host tag, effectively replacing the "Welcome to our
-   grocery store!" text we see in the code.
- * The `#{home.welcome}` expression, specified in the _Standard Expression Syntax_,
-   instructing that the text to be used by the `th:text` attribute should be the
-   message with the `home.welcome` key corresponding to whichever locale we are
-   processing the template with.
+ * `th:text`属性，用于计算其值表达式并将结果设置为宿主标签的主体，
+ 有效地取代了我们在代码中看到的文字“Welcome to our grocery store!”。
+ *  `#{home.welcome}` 表达式，标准表达式 `Standard Expression Syntax` 中指定的语法，
+ 表示 `th:text` 属性显示的文本最终将由键（`key`）为 `home.welcome` 的消息填充。
 
-Now, where is this externalized text?
+现在，外部化文本在哪里呢？
 
-The location of externalized text in Thymeleaf is fully configurable, and it
-will depend on the specific `org.thymeleaf.messageresolver.IMessageResolver`
-implementation being used. Normally, an implementation based on `.properties`
-files will be used, but we could create our own implementations if we wanted,
-for example, to obtain messages from a database.
+Thymeleaf中外部化⽂本的位置是完全可配置的，
+它将取决于正在使⽤的 `org.thymeleaf.messageresolver.IMessageResolver` 的具体实现。
+通常使⽤基于 `.properties` ⽂件的实现，但是如果需要的话也可以自己做其他实现（例如从数据库获取消息）。
 
-However, we have not specified a message resolver for our template engine during
-initialization, and that means that our application is using the _Standard Message Resolver_,
-implemented by `org.thymeleaf.messageresolver.StandardMessageResolver`.
+但是，我们在初始化期间尚未为模板引擎指定消息解析器，这意味着我们的应⽤程序正在使⽤
+由`org.thymeleaf.messageresolver.StandardMessageResolver`实现的`Standard Message Resolver`标准消息解析器。
 
-The standard message resolver expects to find messages for `/WEB-INF/templates/home.html`
-in properties files in the same folder and with the same name as the template,
-like:
+标准消息解析器期望在 `/WEB-INF/templates/home.html` 中找到与该模板相同的⽂件夹中的属性⽂件的消息，例如：
 
- * `/WEB-INF/templates/home_en.properties` for English texts.
- * `/WEB-INF/templates/home_es.properties` for Spanish language texts.
- * `/WEB-INF/templates/home_pt_BR.properties` for Portuguese (Brazil) language
-   texts.
- * `/WEB-INF/templates/home.properties` for default texts (if the locale is not
-   matched).
+ * `/WEB-INF/templates/home_en.properties` 中为英文文本.
+ * `/WEB-INF/templates/home_es.properties` 中为⻄班⽛语⽂本.
+ * `/WEB-INF/templates/home_pt_BR.properties` 为葡萄⽛语（巴⻄）⽂本.
+ * `/WEB-INF/templates/home.properties` 中为默认⽂本（如果语⾔环境不匹配）.
 
-Let's have a look at our `home_es.properties` file:
+我们来看看 `home_es.properties` ⽂件：
 
 ```
 home.welcome=¡Bienvenido a nuestra tienda de comestibles!
 ```
 
-This is all we need for making Thymeleaf process our template. Let's create our
-Home controller then.
+目前制作模板需要的内容就这些，然后让我们创建我们的`HomeController`控制器。
 
 
 ### Contexts
