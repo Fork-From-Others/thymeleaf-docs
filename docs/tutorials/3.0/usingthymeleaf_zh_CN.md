@@ -500,10 +500,9 @@ home.welcome=¡Bienvenido a nuestra tienda de comestibles!
 目前制作模板需要的内容就这些，然后让我们创建我们的`HomeController`控制器。
 
 
-### Contexts
+### 上下文
 
-In order to process our template, we will create a `HomeController` class
-implementing the `IGTVGController` interface we saw before:
+为了处理我们的模板，我们将创建一个实现 `IGTVGController` 接口的 `HomeController` 类，代码如下：
 
 ```java
 public class HomeController implements IGTVGController {
@@ -523,11 +522,8 @@ public class HomeController implements IGTVGController {
 }
 ```
 
-The first thing we see is the creation of a *context*. A Thymeleaf context is an
-object implementing the `org.thymeleaf.context.IContext` interface. Contexts
-should contain all the data required for an execution of the template engine in
-a variables map, and also reference the locale that must be used for
-externalized messages.
+我们⾸先看到的是创建⼀个上下⽂*context*。Thymeleaf上下⽂是实现`org.thymeleaf.context.IContext`接⼝的对象。
+上下⽂中应包含执⾏模板引擎所需的所有数据的变量映射，并且还引用必须用于语言环境的外部化消息。
 
 ```java
 public interface IContext {
@@ -540,8 +536,7 @@ public interface IContext {
 }
 ```
 
-There is a specialized extension of this interface, `org.thymeleaf.context.IWebContext`,
-meant to be used in ServletAPI-based web applications (like SpringMVC).
+这个接口 `org.thymeleaf.context.IWebContext`有一个专门的扩展，用于基于Servlet API的Web应用程序中（如SpringMVC）。
 
 ```java
 public interface IWebContext extends IContext {
@@ -554,31 +549,27 @@ public interface IWebContext extends IContext {
 }
 ```
 
-The Thymeleaf core library offers an implementation of each of these interfaces:
+Thymeleaf核⼼库提供了以下每个接⼝的实现：
 
- * `org.thymeleaf.context.Context` implements `IContext`
- * `org.thymeleaf.context.WebContext` implements `IWebContext`
+ * `org.thymeleaf.context.Context` 实现 `IContext`
+ * `org.thymeleaf.context.WebContext` 实现 `IWebContext`
 
-And as you can see in the controller code, `WebContext` is the one we use. In
-fact we have to, because the use of a `ServletContextTemplateResolver` requires
-that we use a context implementing `IWebContext`.
+正如你在控制器代码中看到我们使用的是 `WebContext` ，实际上我们也必须这样，
+因为使用`ServletContextTemplateResolver`就必须要实现 `IWebContext`。
 
 ```java
 WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 ```
 
-Only three out of those four constructor arguments are required because the
-default locale for the system will be used if none is specified (although you
-should never let this happen in real applications).
+构造函数中的四个参数只有三个是必须的，因为如果没有指定语言环境的话将使用系统默认的语言环境
+（尽管在实际应用中不应该这样做）。
 
-There are some specialized expressions that we will be able to use to obtain the
-request parameters and the request, session and application attributes from the
-`WebContext` in our templates. For example:
+有些专门的表达式，我们能够用来从模版中的 `WebContext` 中获取请求参数、会话、以及应用程序的属性等。例如：
 
- * `${x}` will return a variable `x` stored into the Thymeleaf context or as a *request attribute*.
- * `${param.x}` will return a *request parameter* called `x` (which might be multivalued).
- * `${session.x}` will return a *session attribute* called `x`.
- * `${application.x}` will return a *servlet context attribute* called `x`.
+ * `${x}` 将返回存储在Thymeleaf上下文中的 `x` 变量或者是作为请求属性。
+ * `${param.x}` 将返回请求参数 `x` （可能有多个值）。
+ * `${session.x}` 将返回会话属性 `x`。
+ * `${application.x}` 将返回Servlet上下文属性 `x`。
 
 
 ### Executing the template engine
