@@ -572,17 +572,16 @@ WebContext ctx = new WebContext(request, response, servletContext, request.getLo
  * `${application.x}` 将返回Servlet上下文属性 `x`。
 
 
-### Executing the template engine
+### 执行模板引擎
 
-With our context object ready, now we can tell the template engine to process
-the template (by its name) using the context, and passing it a response writer
-so that the response can be written to it:
+随着我们的上下⽂对象准备就绪，现在我们可以告诉模板引擎使⽤上下⽂来处理模板（通过模版的名字），
+并传递⼀个响应写⼊器，以便可以将响应内容写⼊它：
 
 ```java
 templateEngine.process("home", ctx, response.getWriter());
 ```
 
-Let's see the results of this using the Spanish locale:
+让我们看看⻄班⽛语⾔环境的结果：
 
 ```html
 <!DOCTYPE html>
@@ -606,37 +605,34 @@ Let's see the results of this using the Spanish locale:
 
 
 
-3.2 More on texts and variables
+3.2 关于文本和变量的更多内容
 -------------------------------
 
 
-### Unescaped Text
+### 非转义文本
 
-The simplest version of our Home page seems to be ready now, but there is
-something we have not thought about... what if we had a message like this?
+我们的主⻚最简单的版本似乎已经准备好了，但是我们还有没有没考虑到的呢？如果我们有这样的消息呢？
 
 ```java
 home.welcome=Welcome to our <b>fantastic</b> grocery store!
 ```
 
-If we execute this template like before, we will obtain:
+如果像以前⼀样执⾏此模板，我们将获得如下结果：
 
 ```html
 <p>Welcome to our &lt;b&gt;fantastic&lt;/b&gt; grocery store!</p>
 ```
 
-Which is not exactly what we expected, because our `<b>` tag has been escaped
-and therefore it will be displayed in the browser.
+这不是我们预期的效果，因为我们的`<b>`标签已被转义，它将显示在浏览器中。
 
-This is the default behaviour of the `th:text` attribute. If we want Thymeleaf
-to respect our HTML tags and not escape them, we will have to use a different
-attribute: `th:utext` (for "unescaped text"):
+这是 `th:text` 属性的默认行为，如果我们希望Thymeleaf原样输出我们的HTML标签，
+⽽不是转义他们，我们将不得不使⽤另⼀个不同的属性：`th:utext` （用于非转义文本）：
 
 ```html
 <p th:utext="#{home.welcome}">Welcome to our grocery store!</p>
 ```
 
-This will output our message just like we wanted it:
+这样输出的内容就是我们想要的结果：
 
 ```html
 <p>Welcome to our <b>fantastic</b> grocery store!</p>
