@@ -639,10 +639,10 @@ home.welcome=Welcome to our <b>fantastic</b> grocery store!
 ```
 
 
-### Using and displaying variables
+### 变量的使用和展示
 
-Now let's add some more content to our home page. For example, we may want to
-display the date below our welcome message, like this:
+现在我们再添加⼀些更多的内容到我们的主⻚。 
+例如，我们可能希望在我们的欢迎信息下⽅显示⽇期，如下所示：
 
 ```
 Welcome to our fantastic grocery store!
@@ -650,8 +650,7 @@ Welcome to our fantastic grocery store!
 Today is: 12 july 2010
 ```
 
-First of all, we will have to modify our controller so that we add that date as
-a context variable:
+⾸先，我们将必须修改我们的控制器，以便将该⽇期添加到上下⽂变量：
 
 ```java
 public void process(
@@ -671,8 +670,8 @@ public void process(
 }
 ```
 
-We have added a `String` variable called `today` to our context, and now we can display
-it in our template:
+我们在上下⽂中添加了⼀个名为`today`的`String`类型变量，
+现在我们可以在模板中使用该变量：
 
 ```html
 <body>
@@ -684,21 +683,15 @@ it in our template:
 </body>
 ```
 
-As you can see, we are still using the `th:text` attribute for the job (and
-that's correct, because we want to replace the tag's body), but the syntax is
-a little bit different this time and instead of a `#{...}` expression value, we
-are using a `${...}` one. This is a **variable expression**, and it contains
-an expression in a language called _OGNL (Object-Graph Navigation Language)_
-that will be executed on the context variables map we talked about before.
+正如你所看到的，我们仍然使⽤ `th:text` 属性（这是正确的，因为我们要替换标签的正⽂），
+有点不同的是，我们使⽤的是 `${...}` 变量表达式而不是 `#{...}` 值表达式。 
+这是因为变量表达式包含OGNL（Object-Graph Navigation Language）的表达式，
+它将在之前讨论的上下⽂变量映射上执⾏。
 
-The `${today}` expression simply means "get the variable called today", but
-these expressions could be more complex (like `${user.name}` for "get the
-variable called user, and call its `getName()` method").
+`${today}`这个表达式的意思就是“获取名称为today的变量”，
+但是这些表达式还可以更复杂（例如， `${user.name}` 表示获取名称为user的变量并且调用它的`getName()`方法）。
 
-There are quite a lot of possibilities in attribute values: messages, variable
-expressions... and quite a lot more. The next chapter will show us what all
-these possibilities are.
-
+属性值的使用方式有很多：消息、变量表达式……，我们将在下一章向大家介绍
 
 
 
