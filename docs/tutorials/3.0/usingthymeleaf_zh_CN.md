@@ -695,15 +695,13 @@ public void process(
 
 
 
-4 Standard Expression Syntax
+4 标准表达式语法
 ============================
 
-We will take a small break in the development of our grocery virtual store to
-learn about one of the most important parts of the Thymeleaf Standard Dialect:
-the Thymeleaf Standard Expression syntax.
+我们暂时先将虚拟杂货店项目的开发放一放，接下来让我来学习Thymeleaf标准方言中最重要的部分之一：
+Thymeleaf标准表达式语法。
 
-We have already seen two types of valid attribute values expressed in this
-syntax: message and variable expressions:
+我们之前已经看到过两种类型的属性值的表达方式：消息和变量表达式：
 
 ```html
 <p th:utext="#{home.welcome}">Welcome to our grocery store!</p>
@@ -711,42 +709,41 @@ syntax: message and variable expressions:
 <p>Today is: <span th:text="${today}">13 february 2011</span></p>
 ```
 
-But there are more types of expressions, and more interesting details to learn
-about the ones we already know. First, let's see a quick summary of the
-Standard Expression features:
+但是Thymeleaf还有更多类型的表达式和以及有趣的细节需要我们去学习。
+首先，我们来看看标准表达式的功能概要：
 
- * Simple expressions:
-    * Variable Expressions: `${...}`
-    * Selection Variable Expressions: `*{...}`
-    * Message Expressions: `#{...}`
-    * Link URL Expressions: `@{...}`
-    * Fragment Expressions: `~{...}`
- * Literals
-    * Text literals: `'one text'`, `'Another one!'`,...
-    * Number literals: `0`, `34`, `3.0`, `12.3`,...
-    * Boolean literals: `true`, `false`
-    * Null literal: `null`
-    * Literal tokens: `one`, `sometext`, `main`,...
- * Text operations: 
-    * String concatenation: `+`
-    * Literal substitutions: `|The name is ${name}|`
- * Arithmetic operations:
-    * Binary operators: `+`, `-`, `*`, `/`, `%`
-    * Minus sign (unary operator): `-`
- * Boolean operations:
-    * Binary operators: `and`, `or`
-    * Boolean negation (unary operator): `!`, `not`
- * Comparisons and equality:
-    * Comparators: `>`, `<`, `>=`, `<=` (`gt`, `lt`, `ge`, `le`)
-    * Equality operators: `==`, `!=` (`eq`, `ne`)
- * Conditional operators:
+ * 简单表达式：
+    * 变量表达式： `${...}`
+    * 选择变量表达式： `*{...}`
+    * 消息表达式： `#{...}`
+    * URL网址链接表达式： `@{...}`
+    * 网页片段表达式： `~{...}`
+ * 文本：
+    * 文字： `'one text'`, `'Another one!'`,...
+    * 数字： `0`, `34`, `3.0`, `12.3`,...
+    * 布尔： `true`, `false`
+    * 空值： `null`
+    * Token： `one`, `sometext`, `main`,...
+ * 字符串操作：
+    * 字符串连接： `+`
+    * 文本替换： `|The name is ${name}|`
+ * 算术运算：
+    * 二元运算符： `+`, `-`, `*`, `/`, `%`
+    * 减号 (一元运算符)： `-`
+ * 布尔运算：
+    * 二元运算符： `and`, `or`
+    * 布尔取反 (一元运算符): `!`, `not`
+ * 关系运算符：
+    * 比较： `>`, `<`, `>=`, `<=` (`gt`, `lt`, `ge`, `le`)
+    * 相等： `==`, `!=` (`eq`, `ne`)
+ * 条件运算符：
     * If-then: `(if) ? (then)`
     * If-then-else: `(if) ? (then) : (else)`
     * Default: `(value) ?: (defaultvalue)`
- * Special tokens:
-    * No-Operation: `_`
+ * 特殊符号：
+    * 无操作： `_`
 
-All these features can be combined and nested:
+以上所有的运算或者操作都可以组合嵌套：
 
 ```html
 'User is of type ' + (${user.isAdmin()} ? 'Administrator' : (${user.type} ?: 'Unknown'))
@@ -754,42 +751,38 @@ All these features can be combined and nested:
 
 
 
-4.1 Messages
+4.1 消息
 ------------
 
-As we already know, `#{...}` message expressions allow us to link this:
+我们已经知道，消息表达式`#{...}`允许我们这样引用消息字符串：
 
 ```html
 <p th:utext="#{home.welcome}">Welcome to our grocery store!</p>
 ```
 
-...to this:
+上面消息表达式的字符串如下：
 
 ```
 home.welcome=¡Bienvenido a nuestra tienda de comestibles!
 ```
 
-But there's one aspect we still haven't thought of: what happens if the message
-text is not completely static? What if, for example, our application knew who is
-the user visiting the site at any moment and we wanted to greet them by name?
+但是还有一点我们没想到：如果消息文本不是完全静态的会怎么样呢？
+例如，我们的应用程序想知道是哪个用户在访问网站，我们能否通过用户名字来问候用户呢？
 
 ```html
 <p>¡Bienvenido a nuestra tienda de comestibles, John Apricot!</p>
 ```
 
-This means we would need to add a parameter to our message. Just like this:
+这意味着我们需要在消息中添加⼀个像这样的参数：
 
 ```
 home.welcome=¡Bienvenido a nuestra tienda de comestibles, {0}!
 ```
 
-Parameters are specified according to the
-[`java.text.MessageFormat`](https://docs.oracle.com/javase/10/docs/api/java/text/MessageFormat.html)
-standard syntax, which means you can format to numbers and dates as specified
-in the API docs for classes in the `java.text.*` package.
+根据[`java.text.MessageFormat`](https://docs.oracle.com/javase/10/docs/api/java/text/MessageFormat.html)
+标准语法指定参数，并且可以根据这些类的API⽂档中指定的数字和⽇期格式来填充参数。
 
-In order to specify a value for our parameter, and given an HTTP session
-attribute called `user`, we could have:
+为了指定我们参数的值，并给出⼀个名为`user`的HTTP会话属性，可以像这样操作：
 
 ```html
 <p th:utext="#{home.welcome(${session.user.name})}">
@@ -797,12 +790,12 @@ attribute called `user`, we could have:
 </p>
 ```
 
-> Note that the use of `th:utext` here means that the formatted message will
-> not be escaped. This example assumes that `user.name` is already escaped.
+> 请注意，这里使用的 `th:utext` 意味着格式化的消息不会被转义。
+> 在这个例子中，我们假设 `user.name` 已经转义了。
 
-Several parameters can be specified, separated by commas.
+如果需要指定多个参数，可以用英文逗号分割。
 
-The message key itself can come from a variable:
+实际上，消息键本身也可以来自一个变量：
 
 ```html
 <p th:utext="#{${welcomeMsgKey}(${session.user.name})}">
