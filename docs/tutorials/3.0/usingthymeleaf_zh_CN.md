@@ -805,34 +805,31 @@ home.welcome=¡Bienvenido a nuestra tienda de comestibles, {0}!
 
 
 
-4.2 Variables
+4.2 变量
 -------------
 
-We already mentioned that `${...}` expressions are in fact OGNL (Object-Graph
-Navigation Language) expressions executed on the map of variables contained in
-the context.
+我们已经提到的`${...}`表达式，
+实际上是在上下文变量映射上执行的OGNL(Object-Graph Navigation Language)表达式。
 
-> For detailed info about OGNL syntax and features, you should read the 
-> [OGNL Language Guide](http://commons.apache.org/ognl/)
+> 想了解更多关于OGNL表达式的语法和特性，可参考官网手册
+> [OGNL Language Guide](http://commons.apache.org/ognl/)。
 > 
-> In Spring MVC-enabled applications OGNL will be replaced with **SpringEL**,
-> but its syntax is very similar to that of OGNL (actually, exactly the same for
-> most common cases).
+> 在启用Spring MVC的应用程序中，OGNL将被替换成**SpringEL**，
+> 但其语法与OGNL⾮常相似（实际上，在⼤多数常⻅情况下完全相同）。
 
-From OGNL's syntax, we know that the expression in:
+从OGNL的语法，我们知道：
 
 ```html
 <p>Today is: <span th:text="${today}">13 february 2011</span>.</p>
 ```
 
-...is in fact equivalent to this:
+实际上等同于：
 
 ```java
 ctx.getVariable("today");
 ```
 
-But OGNL allows us to create quite more powerful expressions, and that's how
-this:
+但OGNL允许我们创建更强⼤的表达式，就像这样：
 
 ```html
 <p th:utext="#{home.welcome(${session.user.name})}">
@@ -840,13 +837,13 @@ this:
 </p>
 ```
 
-...obtains the user name by executing:
+通过执⾏如下代码获取⽤户名：
 
 ```java
 ((User) ctx.getVariable("session").get("user")).getName();
 ```
 
-But getter method navigation is just one of OGNL's features. Let's see some more:
+但是getter方法只是OGNL的一个特性。 让我们看看其他的：
 
 ```java
 /*
