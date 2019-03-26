@@ -878,57 +878,51 @@ ${person.createCompleteNameWithSeparator('-')}
 ```
 
 
-### Expression Basic Objects
+### 基本表达式对象
 
-When evaluating OGNL expressions on the context variables, some objects are made
-available to expressions for higher flexibility. These objects will be
-referenced (per OGNL standard) starting with the `#` symbol:
+在对上下文变量执行OGNL表达式时，为了获得更高的灵活性，某些对象变量被写成表达式。
+这些对象（按照OGNL标准）将是以 `#` 符号开头：
 
- * `#ctx`: the context object.
- * `#vars:` the context variables.
- * `#locale`: the context locale.
- * `#request`: (only in Web Contexts) the `HttpServletRequest` object.
- * `#response`: (only in Web Contexts) the `HttpServletResponse` object.
- * `#session`: (only in Web Contexts) the `HttpSession` object.
- * `#servletContext`: (only in Web Contexts) the `ServletContext` object.
+ * `#ctx`: 上下⽂对象
+ * `#vars:` 上下⽂变量
+ * `#locale`: 上下⽂地区设置
+ * `#request`: (仅在Web Contexts中) `HttpServletRequest` 对象
+ * `#response`: (仅在Web Contexts中) `HttpServletResponse` 对象
+ * `#session`: (仅在Web Contexts中) `HttpSession` 对象
+ * `#servletContext`: (仅在Web Contexts中) `ServletContext` 对象
 
-So we can do this:
+因此，我们可以这样做：
 
 ```html
 Established locale country: <span th:text="${#locale.country}">US</span>.
 ```
 
-You can read the full reference of these objects in [Appendix A](#appendix-a-expression-basic-objects).
+你可以在附录A中阅读这些对象的完整说明[Appendix A](#appendix-a-expression-basic-objects)。
 
 
-### Expression Utility Objects
+### ⼯具表达式对象
 
-Besides these basic objects, Thymeleaf will offer us a set of utility objects
-that will help us perform common tasks in our expressions.
+除了基本的对象之外，Thymeleaf还为我们提供了⼀组⼯具对象，
+这些对象将帮助我们在表达式中执⾏常⻅任务。
 
- * `#execInfo`: information about the template being processed.
- * `#messages`: methods for obtaining externalized messages inside variables
-   expressions, in the same way as they would be obtained using #{...} syntax.
- * `#uris`: methods for escaping parts of URLs/URIs
- * `#conversions`: methods for executing the configured *conversion service* (if any).
- * `#dates`: methods for `java.util.Date` objects: formatting, component
-   extraction, etc.
- * `#calendars`: analogous to `#dates`, but for `java.util.Calendar` objects.
- * `#numbers`: methods for formatting numeric objects.
- * `#strings`: methods for `String` objects: contains, startsWith, prepending/appending,
-   etc.
- * `#objects`: methods for objects in general.
- * `#bools`: methods for boolean evaluation.
- * `#arrays`: methods for arrays.
- * `#lists`: methods for lists.
- * `#sets`: methods for sets.
- * `#maps`: methods for maps.
- * `#aggregates`: methods for creating aggregates on arrays or collections.
- * `#ids`: methods for dealing with id attributes that might be repeated (for
-   example, as a result of an iteration).
+ * `#execInfo`: 有关正在处理的模板的信息
+ * `#messages`: ⽤于在变量表达式中获取外部化消息的⽅法，和`#{...}` 语法相似
+ * `#uris`: 转义URL/URI部分的⽅法
+ * `#conversions`: 执⾏配置的转换服务的⽅法（如果有的话）
+ * `#dates`:  `java.util.Date` 对象的方法: 格式化、组件提取等
+ * `#calendars`: 类似于`#dates`, 是针对`java.util.Calendar` 对象
+ * `#numbers`: ⽤于格式化数字对象的⽅法
+ * `#strings`: String对象的⽅法： contains, startsWith, prepending/appending等
+ * `#objects`: ⼀般对象的⽅法
+ * `#bools`: 布尔取值的⽅法
+ * `#arrays`: 数组的⽅法
+ * `#lists`: 列表的⽅法
+ * `#sets`: 集合的⽅法
+ * `#maps`: Map的方法
+ * `#aggregates`: 在数组或集合上创建聚合的⽅法
+ * `#ids`: 处理可能重复的id属性的⽅法（例如，作为迭代的结果）
 
-You can check what functions are offered by each of these utility objects in the
-[Appendix B](#appendix-b-expression-utility-objects).
+你可以在附录B中查看每个实⽤程序对象提供的功能[Appendix B](#appendix-b-expression-utility-objects).
 
 
 ### Reformatting dates in our home page
